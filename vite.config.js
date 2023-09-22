@@ -16,13 +16,21 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     }),
     Components({
-      resolvers: [ElementPlusResolver()],
+      // 1.配置elementPlus采用sass样式配色系统
+      resolvers: [ElementPlusResolver({ importStyle: "sass" })],
     }),
   ],
   resolve: {
     alias: {
       // 将 @ 转为 ./src
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData:  `@use "@/styles/element/index.scss" as *;`
+      },
     },
   },
 });
