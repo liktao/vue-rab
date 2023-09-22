@@ -1,0 +1,388 @@
+### 创建项目
+
+```sh
+npm init vue@latest
+```
+
+
+
+### notes
+
+#### 1. setup 语法糖
+
+- setup 选项的执行时机?
+
+  beforeCreate 钩子之前自动执行
+
+- setup 写代码的特点是什么?
+
+  定义数据+函数然后以对象方式 return
+
+- `<script setup>` 解决了什么问题?
+
+  经过语法糖的封装更简单的使用组合式 API
+
+- `setup`中的`this`还指向组件实例吗?
+
+  指向 `undefined`
+
+- `setup` 语法糖会被编译成 `setup` 函数
+
+#### 2. watch
+
+- 作为 watch 函数的第-一个参数，ref 对象需要添加.value 吗?
+
+  不需要，watch 会自动读取
+
+- watch 只能侦听单个数据吗?
+
+  单个或者多个
+
+- 不开启 deep,直接修改嵌套属性能触发回调吗?
+
+  不能，默认是浅层侦听(ref 对象)
+
+- 不开启 deep,想在某个层次比较深的属性变化时执行回调怎么做?
+
+  可以把第一个参数写成函数的写法，返回要监听的具体属性
+
+#### 3. 组件通信(setup 语法糖)
+
+##### 父传子
+
+- 基本思想
+
+  1. 父组件中给子组件绑定属性
+  2. 子组件内部通过 props 选项接收
+
+  父组件：传值
+
+  ```vue
+  <script setup>
+    import Son from "./Son.vue";
+    let num = ref(90);
+  </script>
+  <template>
+    <!-- 1. 绑定属性msg -->
+    <Son :num="num" msg="message" />
+  </template>
+  ```
+
+  子组件：收
+
+  ```vue
+  <script setup>
+    // 2.通过defineProps "编译器宏"接收子组件传递的数据
+    const props = defineProps({
+      msg: String,
+      num: String,
+    });
+  </script>
+  <template>
+    {{ msg }}
+    {{ num }}
+  </template>
+  ```
+
+##### 子传父
+
+- 基本思想
+
+  1. 父组件中给子组件标签通过@绑定事件
+
+  2. 子组件内部通过$emit 方法触发事件
+
+  父组件：收
+
+  ```vue
+  <script setup>
+    import Son from "./Son.vue";
+    let num = ref(90);
+  
+    const getMsg = (msg) => {
+      console.log(msg);
+    };
+  </script>
+  <template>
+    <!-- 1. 绑定自定义事件 -->
+    <Son @get-msg="getMsg" />
+  </template>
+  ```
+
+  子组件：传
+
+  ```vue
+  <script setup>
+    // 2.通过defineEmi ts编译器宏生成emit方法
+    const emit = defineEmits(['get-msg']);
+    function sendMsg(data){
+      emit('get-msg', data)
+    }
+  </script>
+  <template>
+    <button @click = 'sendMsg('hello father')'>给父组件发数据</button>
+  </template>
+  ```
+
+#### 4. ref 获取真实 DOM
+
+- 基本思想
+
+  1. 调用 ref 函数生成一个 ref 对象，js 中
+  2. 通过 ref 标识绑定 ref 对象到标签，html 中
+  3. 也可以获取组件实例对象
+
+  **获取 DOM：**
+
+  ```vue
+  <script setup>
+    // 1. 调用ref函数得到ref对象
+    let divRef = ref(null);
+
+    // 组件挂载完毕
+    onMounted(() => {
+      console.log(divRef);
+    });
+  </script>
+  <template>
+    <!-- 2. 通过ref标识绑定ref对象 -->
+    <div ref="divRef">div</div>
+  </template>
+  ```
+
+  **获取组件实例对象：常用**
+
+  ```vue
+  <!-- 父组件 -->
+  <script setup>
+    import Son from "./Son.vue";
+    const _Son = ref(null);
+  </script>
+  <template>
+    <Son ref="_Son" />
+  </template>
+  ```
+
+  ```vue
+  <!-- 子组件 -->
+  <script setup>
+    let sum = ref(0);
+    function f() {}
+  </script>
+  <template></template>
+  ```
+
+- `defineExpose()`
+  默认情况下，在`<script setup>`语法糖下，==组件内部的属性和方法是不开放==给父组件访问的，可以通过`defineExpose`编译宏==指定哪些属性和方法允许访问==
+
+  例如上面例子，在父组件访问不了`_Son`的属性(`sum`)和方法(`f()`)，解决办法如下：
+
+  ```vue
+  <!-- 子组件 -->
+  <script setup>
+    let sum = ref(0);
+    function f() {}
+  
+    // 对外暴露方法和属性
+    defineExpose({ name, f });
+  </script>
+  <template></template>
+  ```
+
+#### 5. provide 和 inject
+
+- provide 和 inject 的作用是什么?
+
+  跨层组件通信
+
+- 如何在传递的过程中保持数据响应式?
+
+  第二个参数传递 ref 对象
+
+- 底层组件想要通知顶层组件做修改，如何做?
+
+  传递方法给底层组件，底层组件调用方法
+
+  ```vue
+  <!-- 顶层（祖）组件 -->
+  <script setup>
+    let data = ref(0);
+    provide("data", 90);
+    provide('changeData',()={
+     data++
+    })
+  </script>
+  <template></template>
+  ```
+
+  ```vue
+  <!-- 底层（后代）组件 -->
+  <script setup>
+    // 不能直接在后代组件修改祖组件的数据
+    const data = inject("data");
+    const chnData = inject("changeData");
+  </script>
+  <template></template>
+  ```
+
+- 一颗组件树中只有一个顶层(祖先)或底层(后代)组件吗?
+
+  相对概念，存在多个顶层和底层的关系
+
+#### 6. Pinia
+
+- Pinia 是 Vue 的专属的最新状态管理库，是 Vuex 状态管理工具的替代品。
+
+  1. 提供更加简单的 API (去掉了 mutation )
+  2. 提供符合组合式风格的 API(和 Vue3 新语法统一)
+  3. 去掉了 modules 的概念，每一个 store 都是一个独立的模块
+  4. 搭配 TypeScript 一起使用提供可靠的类型推断
+
+- 安装 Pinia
+
+  ```js
+  npm i -D pinia
+  ```
+
+  创建一个 pinia 实例(根 store)并将其传递给应用
+
+  ```js
+  // main.js
+  import { createApp } from "vue";
+  import App from "./App.vue";
+
+  import { createPinia } from "pinia";
+
+  const app = createApp(App);
+
+  const pinia = createPinia();
+
+  app.use(pinia);
+
+  app.mount("#app");
+
+  // createApp(App).use(pinia).mount("#app")
+  ```
+
+- 用法
+
+  > 提示：通过 export 方式导出，在导入时要加 {}，export default 则不需要，并可以起任意名称
+
+  创建一个 Store：
+
+  ```js
+  import { defineStore } from "pinia";
+  
+  // 可以 export default 导出，导入记得改名
+  // export default defineStore("counter", {
+  
+  // 不是 default 导出
+  export const useCounterStore = defineStore("counter", {
+    state: () => ({ count: 0 }),
+    actions: {
+      increment() {
+        this.count++;
+      },
+    },
+  });
+  ```
+
+  然后你就可以在一个组件中使用该 store 了
+
+  ```js
+  // 对应 export default 导出
+  // import useCounterStore from "@/stores/counter";
+  
+  // 对应 export 导出
+  import { useCounterStore } from "@/stores/counter";
+  export default {
+    setup() {
+      // 获取 counter
+      const counter = useCounterStore();
+  
+      // 使用
+  
+      // 1 直接修改
+      counter.count++;
+      // 2 提交 action 修改
+      counter.$patch({ count: counter.count + 1 });
+      // 3 直接调用 action
+      counter.increment();
+    },
+  };
+  ```
+
+  为实现更多高级用法，你甚至可以使用一个函数(与组件`setup()`类似)来定义一个 Store:
+
+  ```js
+  import { defineStore } from "pinia";
+  
+  // 引入 Vue 组合式 API
+  import { ref } from "vue";
+  
+  // export default 导出
+  // export default defineStore("counter", () => {
+  
+  // export 导出
+  export const useCounterStore = defineStore("counter", () => {
+    const count = ref(0);
+    function increment() {
+      count.value++;
+    }
+    return { count, increment };
+  });
+  ```
+
+  **getter 实现**
+
+  ```js
+  import { defineStore } from "pinia";
+  import { ref, computed } from "vue";
+  
+  export const useCounterStore = defineStore("counter", () => {
+    const count = ref(0);
+    function increment() {
+      count.value++;
+    }
+    const doubleCount = computed(() => count.value * 2);
+    return { count, increment, doubleCount };
+  });
+  ```
+
+  **action 如何实现异步**
+
+  action 中实现异步和组件中定义数据和方法的风格完全一致
+
+  ```js
+  import { defineStore } from "pinia";
+  import { ref, computed } from "vue";
+  
+  export const useCounterStore = defineStore("counter", () => {
+    const url = "bat.com";
+    const list = reative([]);
+    const getData = async () => {
+      const res = await axios.get(url);
+      list = res.data;
+    };
+  });
+  ```
+
+  **storeToRefs** 类似 toRefs
+
+  使用 storeToRefs 函数可以辅助保持数据(state + getter)的响应式解构
+
+  ```js
+  import { useCounterStore } from "@/stores/counter";
+  import { storeToRefs } from "pinia";
+  export default {
+    setup() {
+      const counter = useCounterStore();
+  
+      // 数据变量（state）解构
+      const { count } = storeToRefs(counter);
+  
+      // 方法（action）直接从原来的 counter 中解构赋值
+      const { increment } = counter;
+    },
+  };
+  ```
