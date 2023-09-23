@@ -7,7 +7,7 @@ import { useCategoryStore } from "@/stores/category";
   // 解构 store
 const { categoryList } = storeToRefs(category);
 
-console.log(categoryList)
+// console.log(categoryList)
 
 </script>
 
