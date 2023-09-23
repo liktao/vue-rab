@@ -7,3 +7,11 @@ export function getBannerAPI() {
     // method:'GET'
   });
 }
+
+export function getNewAPI() {
+  return httpInstance({
+    url: "/home/new",
+    // get请求不用写
+    // method:'GET'
+  });
+}
