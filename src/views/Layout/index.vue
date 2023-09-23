@@ -5,7 +5,7 @@
 
   import LayoutFixed from "./components/LayoutFixed.vue";
 
-  import {useCategoryStore} from "@/stores/category";
+  import { useCategoryStore } from "@/stores/category";
   import { onMounted } from "vue";
 
   // 使用 pinia 的 category
@@ -17,6 +17,9 @@
   <LayoutFixed />
   <LayoutNav />
   <LayoutHeader />
+
+  <!-- 二级路由出口 -->
   <RouterView />
+
   <LayoutFooter />
 </template>
