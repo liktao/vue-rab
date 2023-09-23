@@ -1,23 +1,39 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+// createRouter：创建router实例对象
+// createWebHistory：创建history模式的路由
+import { createRouter, createWebHistory } from "vue-router";
+
+import Login from "@/views/Login/index.vue";
+import Layout from "@/views/Layout/index.vue";
+import Category from '@/views/Category/index.vue'
+import Home from '@/views/Home/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: HomeView
+      // 要在App给一级路由出口 routerview 
+      path: "/",
+      component: Layout,
+
+      // 要在layout给二级路由出口 routerview 
+      children: [
+        {
+          path: 'category',
+          component:Category
+        },
+        {
+          // 默认页面
+          path: '',
+          component:Home
+        }
+      ]
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
-  ]
-})
+      path: "/login",
+      component: Login,
+    },
+  ],
+});
 
-export default router
+// 导出路由
+export default router;

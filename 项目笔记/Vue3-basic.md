@@ -4,8 +4,6 @@
 npm init vue@latest
 ```
 
-
-
 ### notes
 
 #### 1. setup 语法糖
@@ -98,7 +96,7 @@ npm init vue@latest
   <script setup>
     import Son from "./Son.vue";
     let num = ref(90);
-  
+
     const getMsg = (msg) => {
       console.log(msg);
     };
@@ -182,7 +180,7 @@ npm init vue@latest
   <script setup>
     let sum = ref(0);
     function f() {}
-  
+
     // 对外暴露方法和属性
     defineExpose({ name, f });
   </script>
@@ -272,10 +270,10 @@ npm init vue@latest
 
   ```js
   import { defineStore } from "pinia";
-  
+
   // 可以 export default 导出，导入记得改名
   // export default defineStore("counter", {
-  
+
   // 不是 default 导出
   export const useCounterStore = defineStore("counter", {
     state: () => ({ count: 0 }),
@@ -292,16 +290,16 @@ npm init vue@latest
   ```js
   // 对应 export default 导出
   // import useCounterStore from "@/stores/counter";
-  
+
   // 对应 export 导出
   import { useCounterStore } from "@/stores/counter";
   export default {
     setup() {
       // 获取 counter
       const counter = useCounterStore();
-  
+
       // 使用
-  
+
       // 1 直接修改
       counter.count++;
       // 2 提交 action 修改
@@ -316,13 +314,13 @@ npm init vue@latest
 
   ```js
   import { defineStore } from "pinia";
-  
+
   // 引入 Vue 组合式 API
   import { ref } from "vue";
-  
+
   // export default 导出
   // export default defineStore("counter", () => {
-  
+
   // export 导出
   export const useCounterStore = defineStore("counter", () => {
     const count = ref(0);
@@ -338,7 +336,7 @@ npm init vue@latest
   ```js
   import { defineStore } from "pinia";
   import { ref, computed } from "vue";
-  
+
   export const useCounterStore = defineStore("counter", () => {
     const count = ref(0);
     function increment() {
@@ -356,7 +354,7 @@ npm init vue@latest
   ```js
   import { defineStore } from "pinia";
   import { ref, computed } from "vue";
-  
+
   export const useCounterStore = defineStore("counter", () => {
     const url = "bat.com";
     const list = reative([]);
@@ -377,12 +375,31 @@ npm init vue@latest
   export default {
     setup() {
       const counter = useCounterStore();
-  
+
       // 数据变量（state）解构
       const { count } = storeToRefs(counter);
-  
+
       // 方法（action）直接从原来的 counter 中解构赋值
       const { increment } = counter;
     },
   };
   ```
+
+#### 7. reative 和 ref 对比
+
+**实际工作中推荐使用 ref 。**
+
+|                   reactive                    |                                ref                                 |
+| :-------------------------------------------: | :----------------------------------------------------------------: |
+|       ❌ 只支持对象和数组(引用数据类型)       |                  ✅ 支持基本数据类型+引用数据类型                  |
+| ✅ 在 `<script>` 和 `<template>` 中无差别使用 | ❌ 在 `<script>` 和 `<template>` 使用方式不同(script 中要`.value`) |
+|   **❌ 重新分配一个新对象会丢失响应性 ❌**    |               **✅ 重新分配一个新对象不会失去响应**                |
+|                能直接访问属性                 |                     需要使用 `.value` 访问属性                     |
+|         ❌ 将对象传入函数时, 失去响应         |                    ✅ 传入函数时, 不会失去响应                     |
+|     ❌ 解构时会丢失响应性, 需使用 toRefs      |              ❌ 解构对象时会丢失响应性, 需使用 toRefs              |
+|            watch 默认开启深度侦听             |                         watch 默认浅层侦听                         |
+
+```js
+let o = reactive({});
+o = { name: "" }; // 失去响应式
+```
