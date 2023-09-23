@@ -5,22 +5,28 @@
 
   import { useRoute } from "vue-router";
 
+  import GoodsItem from "../Home/components/GoodsItem.vue";
+
   // 获取路由
   const route = useRoute();
 
   const categoryData = ref({});
 
   const getCategory = async () => {
-    const res = await getCategoryAPI(route.query.id); // 这里id是RouterLink里面给的
-    // console.log(route.query.id)
+    const res = await getCategoryAPI(route.params.id); // 这里id是RouterLink里面给的
+
+    console.log("categoryData: ", res.result);
     categoryData.value = res.result;
   };
 
-  onMounted(() => getCategory().catch((v) => console.log(v)));
+  onMounted(() => getCategory());
 
   import { getBannerAPI } from "@/apis/home";
 
+  // import { watchArray } from "@vueuse/core";
+
   const bannerList = ref([]);
+
   const getBanner = async () => {
     const res = await getBannerAPI({ distributionSite: "2" });
     bannerList.value = res.result;
@@ -49,6 +55,30 @@
             <img v-img-lazy="item.imgUrl" src="" alt="" />
           </el-carousel-item>
         </el-carousel>
+      </div>
+
+      <div class="sub-list">
+        <h3>全部分类</h3>
+        <ul>
+          <li v-for="i in categoryData.children" :key="i.id">
+            <RouterLink to="/">
+              <img v-img-lazy="i.picture" src="" />
+              <p>{{ i.name }}</p>
+            </RouterLink>
+          </li>
+        </ul>
+      </div>
+      <div
+        class="ref-goods"
+        v-for="item in categoryData.children"
+        :key="item.id"
+      >
+        <div class="head">
+          <h3>- {{ item.name }}-</h3>
+        </div>
+        <div class="body">
+          <GoodsItem v-for="good in item.goods" :good="good" :key="good.id" />
+        </div>
       </div>
     </div>
   </div>

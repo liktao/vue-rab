@@ -19,7 +19,7 @@ const router = createRouter({
       // 要在layout给二级路由出口 routerview
       children: [
         {
-          path: "category",
+          path: "category/:id",
           name: "category",
           component: Category,
           

@@ -1,11 +1,13 @@
 import httpInstance from "@/utils/http";
 
-export function getBannerAPI(query = {}) {
+export function getBannerAPI(params = {}) {
   // 默认为1 商品为2
-  const {distributionSite='1'} = query
+  const { distributionSite = "1" } = params;
   return httpInstance({
-    url: `/home/banner?distributionSite=${distributionSite}`,
-
+    url: "/home/banner",
+    params: {
+      distributionSite,
+    },
     // get请求不用写
     // method:'GET'
   });
