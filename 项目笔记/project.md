@@ -332,7 +332,16 @@ export default router;
    - 图片资源 - 把 images 文件夹放到 assets 目录下
    - 样式资源 - 把 common.scss 文件放到 styles 目录下
 
+   - 引入初始化样式文件
+      ```js
+      //main.js
+      import '@/styles/common.scss'
+
+      ```
+
 2. Error Lens 插件安装
+
+    error lens是一个实时提供错误警告信息的VScode插件，方便开发
 
    ![image.png](https://cdn.nlark.com/yuque/0/2023/png/274425/1677637778086-7314f9de-8130-4388-9fc3-0cf4c59b8454.png#averageHue=%232a2e36&clientId=u68bde7ec-09c8-4&from=paste&height=196&id=udc027a23&name=image.png&originHeight=392&originWidth=1528&originalType=binary&ratio=2&rotation=0&showTitle=false&size=87943&status=done&style=none&taskId=ue37b0611-a082-4595-9dde-66e51632ef7&title=&width=764)
 
