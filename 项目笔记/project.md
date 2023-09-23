@@ -347,6 +347,9 @@ export default router;
 
 #### 10. scss 变量自动导入
 
+- 为什么要自动导入
+  在项目里一些组件共享的色值会以scss变量的方式统一放到一个名为 var.scss的文件中，正常组件中使用，需要先导入scss文件，再使用内部的变量，比较繁琐，自动导入可以免去手动导入的步骤，直接使用内部的变量
+
 ```css
 $xtxColor: #27ba9b;
 $helpColor: #e26237;
@@ -355,7 +358,8 @@ $warnColor: #ffb302;
 $priceColor: #cf4444;
 ```
 
-```json
+```js
+// vite.config.js
 css: {
     preprocessorOptions: {
       scss: {
