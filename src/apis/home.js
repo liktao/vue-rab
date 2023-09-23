@@ -15,3 +15,11 @@ export function getNewAPI() {
     // method:'GET'
   });
 }
+
+export function getHotAPI() {
+  return httpInstance({
+    url: "/home/hot",
+    // get请求不用写
+    // method:'GET'
+  });
+}

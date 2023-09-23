@@ -10,10 +10,7 @@
     newList.value = res.result;
   };
 
-  onMounted(() => {
-    getNew();
-    console.log(newList);
-  });
+  onMounted(() => getNew());
 </script>
 
 <template>
