@@ -8,6 +8,7 @@
 
 <style lang="scss" scoped>
   .testVar {
-    background-color: $priceColor;
+    // background-color: $priceColor;
+    height: 800px;
   }
 </style>
