@@ -1,18 +1,11 @@
 <script setup>
-  import { getCategoryAPI } from "@/apis/layout.js";
-  import { onMounted, ref } from "vue";
+  import { useCategoryStore } from "@/stores/category";
+  import { storeToRefs } from "pinia";
 
-  // 数据
-  const categoryList = ref([]);
-  const getCategory = async () => {
-    const res = await getCategoryAPI();
-    categoryList.value = res.result
-  };
-
-  onMounted(() => {
-    getCategory();
-    console.log(categoryList);
-  });
+  // 使用 pinia 的 category
+  const category = useCategoryStore();
+  // 解构 store
+  const { categoryList } = storeToRefs(category);
 </script>
 
 <template>
@@ -25,7 +18,6 @@
         <li class="home" v-for="item in categoryList" :key="item.id">
           <RouterLink to="/">{{ item.name }}</RouterLink>
         </li>
-       
       </ul>
       <div class="search">
         <i class="iconfont icon-search"></i>

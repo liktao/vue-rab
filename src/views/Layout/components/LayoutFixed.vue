@@ -1,9 +1,18 @@
 <!--LayoutFiexd.vue 实现吸顶交互--->
 <script setup>
   // vueUse
-import { useScroll } from "@vueuse/core";
-  // smooth 平滑滚动
-  const { y } = useScroll(window, { behavior: 'smooth' }); // 窗口滚动位置
+  import { useScroll } from "@vueuse/core";
+
+  import { useCategoryStore } from "@/stores/category";
+  import { storeToRefs } from "pinia";
+
+  // 获取滚动距离，smooth 平滑滚动
+  const { y } = useScroll(window, { behavior: "smooth" }); // 窗口滚动位置
+
+  // 使用 pinia 的 category
+  const category = useCategoryStore();
+  // 解构 store
+  const { categoryList } = storeToRefs(category);
 </script>
 
 <template>
@@ -12,35 +21,8 @@ import { useScroll } from "@vueuse/core";
       <RouterLink class="logo" to="/" />
       <!-- 导航区域 -->
       <ul class="app-header-nav">
-        <li class="home">
-          <RouterLink to="/">首页</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">居家</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">美食</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">服饰</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">母婴</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">个护</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">严选</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">数码</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">运动</RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/">杂项</RouterLink>
+        <li class="home" v-for="item in categoryList" :key="item.id">
+          <RouterLink to="/">{{ item.name }}</RouterLink>
         </li>
       </ul>
 
