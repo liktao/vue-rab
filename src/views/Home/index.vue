@@ -3,7 +3,7 @@
   import HomeBanner from "./components/HomeBanner.vue";
   import HomeNew from "./components/HomeNew.vue";
   import HomeHot from "./components/HomeHot.vue";
-  import HomeProduct from "@/views/Home/components/HomeProduct.vue";
+  import Product from "./components/Product.vue";
 </script>
 
 <template>
@@ -13,7 +13,7 @@
   </div>
   <HomeNew />
   <HomeHot />
-  <HomeProduct />
+  <Product />
 </template>
 
 <style lang="scss" scoped>

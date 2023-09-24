@@ -18,9 +18,9 @@
 
 <template>
   <div class="home-product">
-    <HomePanel :title="cate.name" v-for="cate in goodList" :key="cate.id">
+    <HomePanel v-for="cate in goodList" :title="cate.name" :subTitle="cate.saleInfo"  :key="cate.id">
       <div class="box">
-        <RouterLink class="cover" to="/">
+        <RouterLink class="cover" :to="`/detail/${cate.id}`">
           <img src="" v-img-lazy="cate.picture" />
           <strong class="label">
             <span>{{ cate.name }}馆</span>
