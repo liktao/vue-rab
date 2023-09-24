@@ -1,14 +1,13 @@
 <script setup>
-import { useCategoryStore } from "@/stores/category";
+  import { useCategoryStore } from "@/stores/category";
   import { storeToRefs } from "pinia";
 
   // 使用 pinia 的 category
   const category = useCategoryStore();
   // 解构 store
-const { categoryList } = storeToRefs(category);
+  const { categoryList } = storeToRefs(category);
 
-// console.log(categoryList)
-
+  // console.log(categoryList)
 </script>
 
 <template>
@@ -16,7 +15,9 @@ const { categoryList } = storeToRefs(category);
     <ul class="menu">
       <li v-for="item in categoryList" :key="item.id">
         <RouterLink to="/">{{ item.name }}</RouterLink>
-        <RouterLink v-for="i in item.children.slice(0,2)" :key="i.id" to="/">{{ i.name }}</RouterLink>
+        <RouterLink v-for="i in item.children.slice(0, 2)" :key="i.id" to="/">{{
+          i.name
+        }}</RouterLink>
         <!-- 弹层layer位置 -->
         <div class="layer">
           <h4>分类推荐 <small></small></h4>

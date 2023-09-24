@@ -3,9 +3,9 @@
 
   import { getGoodAPI } from "@/apis/home";
 
-import { onMounted, ref } from "vue";
+  import { onMounted, ref } from "vue";
 
-import GoodsItem from './GoodsItem.vue'
+  import GoodsItem from "./GoodsItem.vue";
 
   const goodList = ref([]);
   const getGoods = async () => {
@@ -21,7 +21,7 @@ import GoodsItem from './GoodsItem.vue'
     <HomePanel :title="cate.name" v-for="cate in goodList" :key="cate.id">
       <div class="box">
         <RouterLink class="cover" to="/">
-          <img src=""  v-img-lazy="cate.picture" />
+          <img src="" v-img-lazy="cate.picture" />
           <strong class="label">
             <span>{{ cate.name }}馆</span>
             <span>{{ cate.saleInfo }}</span>
@@ -29,7 +29,7 @@ import GoodsItem from './GoodsItem.vue'
         </RouterLink>
         <ul class="goods-list">
           <li v-for="good in cate.goods" :key="good.id">
-            <GoodsItem :good="good"/>
+            <GoodsItem :good="good" />
           </li>
         </ul>
       </div>
@@ -123,7 +123,6 @@ import GoodsItem from './GoodsItem.vue'
           }
         }
       }
-
     }
   }
 </style>
