@@ -35,13 +35,27 @@
 
   onMounted(() => getSubCategory());
 
-  function handleClick(tab) {
-    console.log(tab);
+  // 实现列表筛选功能，tab
+  function handleClick() {
+    // console.log(tab);
     reqData.value.page = 1;
     getSubCategory();
-
-    console.log(reqData.value.sortField);
+    // console.log(reqData.value.sortField);
   }
+
+  // 列表无限加载功能实现
+  const disabled = ref(false);
+  const load = async () => {
+    console.log("加载更多数据咯");
+    // 获取下一页的数据
+    reqData.value.page++;
+    const res = await getSubCategoryAPI(reqData.value);
+    goodList.value = [...goodList.value, ...res.result.items];
+    // 加载完毕 停止监听
+    if (res.result.items.length === 0) {
+      disabled.value = true;
+    }
+  };
 </script>
 
 <template>
@@ -57,7 +71,11 @@
       </el-breadcrumb>
     </div>
     <div class="sub-container">
-      <el-tabs v-model="reqData.sortField" @tab-click="handleClick">
+      <el-tabs
+        v-infinite-scroll="load"
+        v-model="reqData.sortField"
+        @tab-click="handleClick"
+      >
         <el-tab-pane label="最新商品" name="publishTime"></el-tab-pane>
         <el-tab-pane label="最高人气" name="orderNum"></el-tab-pane>
         <el-tab-pane label="评论最多" name="evaluateNum"></el-tab-pane>
