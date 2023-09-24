@@ -11,7 +11,7 @@ export const lazyPlugin = {
         // binding: binding.value  指令等于号后面绑定的表达式的值  图片url
         // console.log(el, binding.value);
         const { stop } = useIntersectionObserver(el, ([{ isIntersecting }]) => {
-          console.log(isIntersecting);
+          // console.log(isIntersecting);
           if (isIntersecting) {
             // 进入视口区域
             el.src = binding.value;

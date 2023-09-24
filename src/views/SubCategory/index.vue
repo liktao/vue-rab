@@ -1,20 +1,39 @@
 <script setup>
-  import { getCategoryFilterAPI } from "@/apis/category";
-import { ref, onMounted } from "vue";
-  import {useRoute} from 'vue-router'
+import GoodsItem from '@/views/Home/components/GoodsItem.vue'
+  import { getCategoryFilterAPI, getSubCategoryAPI } from "@/apis/category";
+  import { ref, onMounted } from "vue";
+  import { useRoute } from "vue-router";
 
-  const route = useRoute()
+  // 获取面包屑数据
+  const route = useRoute();
   const categoryData = ref([]);
 
   const getCategoryFilter = async () => {
     const res = await getCategoryFilterAPI(route.params.id);
-    console.log(res);
+    // console.log(res);
     categoryData.value = res.result;
   };
 
   onMounted(() => {
     getCategoryFilter();
   });
+
+  // 获取基础列表数据渲染
+  const goodList = ref([]);
+  const reqData = ref({
+    categoryId: route.params.id,
+    page: 1,
+    pageSize: 20,
+    sortField: "publishTime" | "orderNum" | "evaluateNum",
+  });
+
+  const getSubCategory = async () => {
+    const res = await getSubCategoryAPI(reqData.value);
+    console.log(res);
+    goodList.value = res.result.items;
+  };
+
+  onMounted(() => getSubCategory());
 </script>
 
 <template>
@@ -23,8 +42,10 @@ import { ref, onMounted } from "vue";
     <div class="bread-container">
       <el-breadcrumb separator=">">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: `/category/${categoryData.parentId}` }">{{ categoryData.parentName }} </el-breadcrumb-item>
-        <el-breadcrumb-item>{{categoryData.name}}</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: `/category/${categoryData.parentId}` }"
+          >{{ categoryData.parentName }}
+        </el-breadcrumb-item>
+        <el-breadcrumb-item>{{ categoryData.name }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="sub-container">
@@ -35,6 +56,7 @@ import { ref, onMounted } from "vue";
       </el-tabs>
       <div class="body">
         <!-- 商品列表-->
+        <GoodsItem v-for="good in goodList" :good="good" :key="good.id" />
       </div>
     </div>
   </div>
