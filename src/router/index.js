@@ -30,9 +30,9 @@ const router = createRouter({
           component: Home,
         },
         {
-          path: 'category/sub/:id',
-          component:SubCategory
-        }
+          path: "category/sub/:id",
+          component: SubCategory,
+        },
       ],
     },
     {
@@ -40,6 +40,9 @@ const router = createRouter({
       component: Login,
     },
   ],
+  scrollBehavior() {
+    return { top: 0 };
+  },
 });
 
 // 导出路由
