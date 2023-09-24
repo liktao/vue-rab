@@ -9,7 +9,10 @@
 
   // 规则数据对象
   const rules = {
-    account: [{ required: true, message: "用户名不能为空" },{ min: 4, max: 10, message: "账号长度要求4-10个字符" },],
+    account: [
+      { required: true, message: "用户名不能为空" },
+      { min: 4, max: 10, message: "账号长度要求4-10个字符" },
+    ],
     password: [
       { required: true, message: "密码不能为空" },
       { min: 6, max: 14, message: "密码长度要求6-14个字符" },
@@ -18,14 +21,37 @@
       {
         validator: (rule, value, callback) => {
           if (value) {
-            callback()
+            callback();
           } else {
             callback(new Error("请先同意协议"));
           }
-        }
+        },
       },
     ],
   };
+
+  /**
+   *
+   * 整个表单的内容验证
+   * 思考:每个表单域都有自己的校验触发事件，如果用户一上来就点击登录怎么办呢?
+   * 答:在点击登录时需要对所有需要校验的表单进行统一校验
+   *
+   */
+  const formRef = ref(null);
+  const doLogin = () => {
+    // 调用实例方法
+    formRef.value.validate((valid) => {
+      if (valid) {
+        // todo Login
+
+      }
+    });
+};
+  /**
+   * 用户名和密码只需要通过简单的配置(看文档的方式-复杂功能通过多个不同组件拆解)
+   * 同意协议自定义规则validator:(rule，value，callback)=> {}
+   * 统一校验通过调用form实例的方法 validate -> true
+   */
 </script>
 <template>
   <div>
@@ -48,19 +74,28 @@
         </nav>
         <div class="account-box">
           <div class="form">
-            <el-form label-position="right" :model="userInfo" :rules="rules" label-width="60px" status-icon>
+            <el-form
+              ref="formRef"
+              label-position="right"
+              :model="userInfo"
+              :rules="rules"
+              label-width="60px"
+              status-icon
+            >
               <el-form-item prop="account" label="账户">
                 <el-input v-model="userInfo.account" />
               </el-form-item>
               <el-form-item prop="password" label="密码">
-                <el-input  v-model="userInfo.password"/>
+                <el-input v-model="userInfo.password" />
               </el-form-item>
               <el-form-item prop="agree" label-width="22px">
                 <el-checkbox v-model="userInfo.agree" size="large">
                   我已同意隐私条款和服务条款
                 </el-checkbox>
               </el-form-item>
-              <el-button size="large" class="subBtn">点击登录</el-button>
+              <el-button size="large" class="subBtn" @click="doLogin"
+                >点击登录</el-button
+              >
             </el-form>
           </div>
         </div>
