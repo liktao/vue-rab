@@ -1,6 +1,7 @@
 <script setup>
 import DetailHot from './components/DetailHot.vue'
-  import { ref, onMounted } from "vue";
+import ImageView from '@/components/imageView/index.vue'
+import { ref, onMounted } from "vue";
   import { getDetailAPI } from "@/apis/detail.js";
 
   import { useRoute } from "vue-router";
@@ -42,6 +43,7 @@ import DetailHot from './components/DetailHot.vue'
           <div class="goods-info">
             <div class="media">
               <!-- 图片预览区 -->
+              <ImageView/>
 
               <!-- 统计数量 -->
               <ul class="goods-sales">
