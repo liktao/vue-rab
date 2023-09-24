@@ -1,5 +1,5 @@
 <script setup>
-import GoodsItem from '@/views/Home/components/GoodsItem.vue'
+  import GoodsItem from "@/views/Home/components/GoodsItem.vue";
   import { getCategoryFilterAPI, getSubCategoryAPI } from "@/apis/category";
   import { ref, onMounted } from "vue";
   import { useRoute } from "vue-router";
@@ -29,11 +29,19 @@ import GoodsItem from '@/views/Home/components/GoodsItem.vue'
 
   const getSubCategory = async () => {
     const res = await getSubCategoryAPI(reqData.value);
-    console.log(res);
+    // console.log(res);
     goodList.value = res.result.items;
   };
 
   onMounted(() => getSubCategory());
+
+  function handleClick(tab) {
+    console.log(tab);
+    reqData.value.page = 1;
+    getSubCategory();
+
+    console.log(reqData.value.sortField);
+  }
 </script>
 
 <template>
@@ -49,7 +57,7 @@ import GoodsItem from '@/views/Home/components/GoodsItem.vue'
       </el-breadcrumb>
     </div>
     <div class="sub-container">
-      <el-tabs>
+      <el-tabs v-model="reqData.sortField" @tab-click="handleClick">
         <el-tab-pane label="最新商品" name="publishTime"></el-tab-pane>
         <el-tab-pane label="最高人气" name="orderNum"></el-tab-pane>
         <el-tab-pane label="评论最多" name="evaluateNum"></el-tab-pane>
