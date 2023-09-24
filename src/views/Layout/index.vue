@@ -21,6 +21,6 @@
   <!-- 二级路由出口 -->
   <!-- 添加key 破坏复用机制 强制销毁重建 -->
   <!-- <RouterView :key="$route.fullPath"/> -->
-<RouterView/>
+  <RouterView />
   <LayoutFooter />
 </template>
