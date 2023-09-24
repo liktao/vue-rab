@@ -2,23 +2,27 @@
   import { ref } from "vue";
   // 表单数据对象
   const userInfo = ref({
-    account: "1311111111",
-    password: "123456",
+    account: "",
+    password: "",
     agree: true,
   });
 
   // 规则数据对象
   const rules = {
-    account: [{ required: true, message: "用户名不能为空" }],
+    account: [{ required: true, message: "用户名不能为空" },{ min: 4, max: 10, message: "账号长度要求4-10个字符" },],
     password: [
       { required: true, message: "密码不能为空" },
-      { min: 6, max: 24, message: "密码长度要求6-14个字符" },
+      { min: 6, max: 14, message: "密码长度要求6-14个字符" },
     ],
     agree: [
       {
-        validator: (rule, val, callback) => {
-          return val ? callback() : new Error("请先同意协议");
-        },
+        validator: (rule, value, callback) => {
+          if (value) {
+            callback()
+          } else {
+            callback(new Error("请先同意协议"));
+          }
+        }
       },
     ],
   };
@@ -44,15 +48,15 @@
         </nav>
         <div class="account-box">
           <div class="form">
-            <el-form label-position="right" :rules="rules" label-width="60px" status-icon>
+            <el-form label-position="right" :model="userInfo" :rules="rules" label-width="60px" status-icon>
               <el-form-item prop="account" label="账户">
                 <el-input v-model="userInfo.account" />
               </el-form-item>
               <el-form-item prop="password" label="密码">
                 <el-input  v-model="userInfo.password"/>
               </el-form-item>
-              <el-form-item label-width="22px">
-                <el-checkbox size="large">
+              <el-form-item prop="agree" label-width="22px">
+                <el-checkbox v-model="userInfo.agree" size="large">
                   我已同意隐私条款和服务条款
                 </el-checkbox>
               </el-form-item>
