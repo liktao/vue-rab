@@ -1,6 +1,7 @@
 <script setup>
-import DetailHot from './components/DetailHot.vue'
-import ImageView from '@/components/imageView/index.vue'
+  import DetailHot from "./components/DetailHot.vue";
+  import ImageView from "@/components/imageView/index.vue";
+import XtxSku from '@/components/XtxSku/index.vue' 
 import { ref, onMounted } from "vue";
   import { getDetailAPI } from "@/apis/detail.js";
 
@@ -18,6 +19,10 @@ import { ref, onMounted } from "vue";
   onMounted(() => {
     getDetail();
   });
+
+const skuChange = (sku) => {
+    console.log(sku);
+  }
 </script>
 
 <template>
@@ -43,7 +48,7 @@ import { ref, onMounted } from "vue";
           <div class="goods-info">
             <div class="media">
               <!-- 图片预览区 -->
-              <ImageView :imageList="good.mainPictures"/>
+              <ImageView :imageList="good.mainPictures" />
 
               <!-- 统计数量 -->
               <ul class="goods-sales">
@@ -93,6 +98,7 @@ import { ref, onMounted } from "vue";
                 </dl>
               </div>
               <!-- sku组件 -->
+              <XtxSku :goods="good" @change="skuChange"/>
 
               <!-- 数据组件 -->
 
@@ -127,9 +133,8 @@ import { ref, onMounted } from "vue";
             </div>
             <!-- 24热榜+专题推荐 -->
             <div class="goods-aside">
-
-              <DetailHot :hotType="1"/>
-              <DetailHot :hotType="2"/>
+              <DetailHot :hotType="1" />
+              <DetailHot :hotType="2" />
             </div>
           </div>
         </div>
