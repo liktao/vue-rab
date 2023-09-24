@@ -1,7 +1,7 @@
 <script setup>
   import DetailHot from "./components/DetailHot.vue";
-  import ImageView from "@/components/imageView/index.vue";
-import XtxSku from '@/components/XtxSku/index.vue' 
+  // import ImageView from "@/components/imageView/index.vue";
+// import Sku from '@/components/Sku/index.vue' 
 import { ref, onMounted } from "vue";
   import { getDetailAPI } from "@/apis/detail.js";
 
@@ -98,7 +98,7 @@ const skuChange = (sku) => {
                 </dl>
               </div>
               <!-- sku组件 -->
-              <XtxSku :goods="good" @change="skuChange"/>
+              <Sku :goods="good" @change="skuChange"/>
 
               <!-- 数据组件 -->
 
